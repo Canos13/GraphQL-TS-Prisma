@@ -9,26 +9,22 @@ import { Context, context } from './context'
 import { PostCreateInput, PostResolver, SortOrder } from './PostResolver'
 import { UserResolver } from './UserResolver'
 
-
 const app = async () => {
-  tq.registerEnumType(SortOrder, {
-    name: 'SortOrder',
-  })
+	tq.registerEnumType(SortOrder, {
+		name: 'SortOrder',
+	})
 
-  const schema = await tq.buildSchema({
-    resolvers: [PostResolver, UserResolver, PostCreateInput],
-    scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
-    validate: { forbidUnknownValues: false }
-  })
+	const schema = await tq.buildSchema({
+		resolvers: [PostResolver, UserResolver, PostCreateInput],
+		scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
+		validate: { forbidUnknownValues: false }
+	})
 
-  const server = new ApolloServer<Context>({ schema })
+	const server = new ApolloServer<Context>({ schema })
 
-  const { url } = await startStandaloneServer(server, { context: async () => context })
+	const { url } = await startStandaloneServer(server, { context: async () => context })
 
-  console.log(`
-🚀 Server ready at: ${url}
-⭐️  See sample queries: http://pris.ly/e/ts/graphql-typegraphql#using-the-graphql-api`
-  )
+	console.log(`🚀 ApolloServer ready at: ${url}`)
 }
 
 app()
