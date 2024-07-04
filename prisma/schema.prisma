@@ -13,7 +13,6 @@ model User {
     email     String   @unique
     password  String
     fullName  String
-    position  String
     companyId Int
     roleId    Int
     createdAt DateTime @default(now())
@@ -48,7 +47,7 @@ model Ticket {
     id                 Int      @id @default(autoincrement())
     subject            String
     description        String
-    creationDate       DateTime
+
     type               String
     priority           String
     estimatedCloseDate DateTime
@@ -69,7 +68,7 @@ model Ticket {
 model Comment {
     id           Int      @id @default(autoincrement())
     content      String
-    creationDate DateTime
+
     ticketId     Int
     authorId     Int
     createdAt    DateTime @default(now())

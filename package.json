@@ -2,7 +2,8 @@
   "name": "typegraphql-example",
   "scripts": {
     "dev": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prisma": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@apollo/server": "4.10.4",
