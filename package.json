@@ -1,14 +1,18 @@
 {
   "name": "typegraphql-example",
   "scripts": {
-    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts"
+    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "prisma": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@apollo/server": "4.10.4",
     "@prisma/client": "5.14.0",
     "class-validator": "0.14.1",
+    "dotenv": "^16.4.5",
     "graphql": "16.8.1",
     "graphql-scalars": "1.23.0",
+    "pg": "^8.12.0",
     "reflect-metadata": "0.2.2",
     "type-graphql": "2.0.0-rc.1"
   },

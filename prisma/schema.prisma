@@ -1,27 +1,101 @@
-generator client {
-  provider = "prisma-client-js"
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+generator client {
+    provider = "prisma-client-js"
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+    id        Int      @id @default(autoincrement())
+    username  String   @unique
+    email     String   @unique
+    password  String
+    fullName  String
+    companyId Int
+    roleId    Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    company   Company          @relation(fields: [companyId], references: [id])
+    role      Role             @relation(fields: [roleId], references: [id])
+    tickets   Ticket[]         @relation("TicketCreator")
+    comments  Comment[]
+    resolvers TicketResolver[]
+    observers TicketObserver[]
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  viewCount Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model Role {
+    id        Int      @id @default(autoincrement())
+    name      String
+    users     User[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Company {
+    id        Int      @id @default(autoincrement())
+    name      String
+    users     User[]
+    tickets   Ticket[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Ticket {
+    id                 Int      @id @default(autoincrement())
+    subject            String
+    description        String
+
+    type               String
+    priority           String
+    estimatedCloseDate DateTime
+    duration           Int
+    status             String
+    creatorId          Int
+    companyId          Int
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+
+    creator   User             @relation("TicketCreator", fields: [creatorId], references: [id])
+    company   Company          @relation(fields: [companyId], references: [id])
+    comments  Comment[]
+    resolvers TicketResolver[]
+    observers TicketObserver[]
+}
+
+model Comment {
+    id           Int      @id @default(autoincrement())
+    content      String
+
+    ticketId     Int
+    authorId     Int
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    ticket Ticket @relation(fields: [ticketId], references: [id])
+    author User   @relation(fields: [authorId], references: [id])
+}
+
+model TicketResolver {
+    id         Int      @id @default(autoincrement())
+    ticketId   Int
+    resolverId Int
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    ticket   Ticket @relation(fields: [ticketId], references: [id])
+    resolver User   @relation(fields: [resolverId], references: [id])
+}
+
+model TicketObserver {
+    id         Int      @id @default(autoincrement())
+    ticketId   Int
+    observerId Int
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    ticket   Ticket @relation(fields: [ticketId], references: [id])
+    observer User   @relation(fields: [observerId], references: [id])
 }
